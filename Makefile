@@ -1,18 +1,21 @@
 
-DEVTOOLS := $(wildcard ./bin/*)
-TARGET_DIR ?= $(CURDIR)/bin
-LINK_NAME ?= $(HOME)/.local/bin/devtools
-install := $(LINK_NAME)
+INSTALL_DIR ?= $(HOME)/.local/bin/devtools
 
+TOOLNAMES := $(shell ls ./bin)
+INSTALL_BINS ?= $(foreach tool, $(TOOLNAMES), $(INSTALL_DIR)/$(tool))
 
+VPATH = bin
 .PHONY: clean install all
 
-all: .installed
+all: tools
 
-.installed: $(DEVTOOLS)
-	touch .installed
-	ln -sf $(TARGET_DIR) $(LINK_NAME)
+tools: $(INSTALL_BINS)
+
+$(INSTALL_DIR)%: bin% | $(INSTALL_DIR)
+	cp $^ $@
+
+$(INSTALL_DIR):
+	mkdir -p $@
 
 clean:
-	rm .installed
-	rm $(LINK_NAME)
+	rm -rf $(INSTALL_DIR)
