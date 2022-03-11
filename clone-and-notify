@@ -1,0 +1,4 @@
+#!/bin/sh
+
+dir=`pwd`
+git clone $1 && notify-send "$1" Done || notify-send -u critical "Error" "$1"

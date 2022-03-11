@@ -1,0 +1,25 @@
+#!/bin/sh
+
+dir=`pwd`
+
+ls | grep platformio.ini
+if [ $? -eq 0 ]; then
+	notify-send -t 3000 "$dir" "Start building with platformio"
+	MK="platformio run"
+else
+	notify-send -t 3000 "$dir" "Start building with Makefile"
+	MK="make -j3"
+fi
+
+# check if we need bear - positional argument
+if [ $# -ne 0 ]; then
+if [ $1 = "bear" ]; then
+	MK="bear -- $MK"
+	shift
+fi
+fi
+
+MK="$MK $@"
+$MK && notify-send -t 60000 "$dir" Done ||
+	notify-send -u critical "Error"
+

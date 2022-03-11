@@ -1,0 +1,39 @@
+#!/bin/sh
+
+ 
+
+cache=$HOME/.local/share/boom/list
+if [ ! -f $cache ]; then
+	if [ ! -d ${cache%/*} ]; then
+		echo not dir
+		mkdir ${cache%/*}
+	fi
+	touch $cache
+	echo not file
+fi
+
+while [ $# -ne 0 ]; do
+	case $1 in
+		"ls") ses=`cat $cache | fzf `
+			if [ $? -ne 0 ]; then
+				exit 1
+			fi
+			echo $ses 
+			tmux new-ses -c ${ses##* } -s ${ses% *} -d 
+			shift
+			;;
+		"rm") ses=`cat $cache | fzf `
+			if [ $? -ne 0 ]; then
+				exit 1
+			fi
+			key=`echo ${ses##* } `
+			cat $cache | grep -v $key > ${cache}_tmp
+			mv ${cache}_tmp ${cache}
+			shift
+			;;
+		"add") d=`pwd`
+			echo "${d##*/} $d" >> $cache 
+			shift
+			;;
+	esac;
+done;

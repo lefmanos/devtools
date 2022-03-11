@@ -1,0 +1,57 @@
+#!/bin/sh
+# Dependancies: tmux fzf (optional but at least one fuzzyfinder menu is needed)
+
+cd $HOME/work
+
+WORK="$HOME/work \
+	$HOME/work/MIA \
+	$HOME/work/diplwmatiki \
+	$HOME/work/mathimata"
+
+PERSONAL="$HOME/.config \
+	$HOME/.local/bin \
+	$HOME/.local/src"
+
+TDIRS="$WORK $PERSONAL"
+
+# setup fuzzy finder
+if [ $# -eq 0 ]; then
+	FUZZY=fzf
+else
+	case $1 in
+		help|-h|--help|-help|h)
+			printf "Usage $0 [OPTION] [FUZZYFINDER]\n"
+			printf "\n"
+			printf "Lets you select a directory via fzf, creates a tmux session with the name of the direcory and attaches to it\n"
+			printf "\t--help, -h\tprints this help message\n"
+			printf "\tFUZZYFINDER\tProvide an alternative to fzf, eg dmenu, rofi. Optional\n"
+
+			printf "\n"
+			printf "\n"
+			printf "Manos Lefakis\n"
+			exit 1
+			;;
+		*)
+			FUZZY=$1
+			;;
+	esac
+fi
+
+# find directory for new session
+workspace=`find $TDIRS -maxdepth 2 -type d | $FUZZY`
+if [ $? -ne 0 ]; then
+	exit 1
+fi
+
+# create session
+name=$(basename $workspace)
+if ! tmux has-session -t $name 2> /dev/null; then
+	tmux new -ds $name -c $workspace
+fi
+
+# attach to session
+if [ -z $TMUX ]; then
+	tmux a -t $name
+else
+	tmux switch-client -t $name
+fi

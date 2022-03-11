@@ -1,0 +1,33 @@
+#!/bin/sh
+
+DIR=`pwd`
+tmux has-session -t build 2>/dev/null || tmux new -s build -d -c $DIR
+
+if [ $# -ne 0 ]; then
+if [ $1 = "new" ]; then
+	# useless
+	tmux send-keys -t build "cd $DIR
+	"
+	shift
+fi
+if [ $1 = "bear" ]; then
+	OPTS="bear"
+	shift
+fi
+fi
+
+#See if we are building juce code
+if [ -d JuceLibraryCode ]; then
+	notify-send -t 3000 "tmake" "juce framework detected"
+	if [ -d Builds/LinuxMakefile ]; then
+		tmux send-keys -t build "cd $DIR/Builds/LinuxMakefile
+		"
+		# Ready to build
+	else
+		notify-send "tmake" "Builds directory not found - run Projucer to configure."
+		exit 1
+	fi
+fi
+		
+tmux send-keys -t build "make-and-notify $OPTS $@
+"
