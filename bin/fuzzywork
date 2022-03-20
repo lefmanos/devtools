@@ -67,7 +67,7 @@ create_session()
 {
 	name=$(basename $1)
 	if ! tmux has-session -t $name 2> /dev/null; then
-		tmux new -ds $name -c $1
+		tmux new -ds $name -c $1 > /dev/null
 	fi
 	echo $name
 }
@@ -76,12 +76,13 @@ create_session()
 attach_to()
 {
 	if [ -z $TMUX ]; then
-		tmux a -t $1
-	else
 		tmux switch-client -t $1
+	else
+		tmux a -t $1
 	fi
 }
 
 _wrks=`find_dir` || exit 69
 _ns=`create_session $_wrks`
+echo $_ns
 attach_to $_ns
