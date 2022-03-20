@@ -54,7 +54,7 @@ done;
 # find directory for new session
 find_dir()
 {
-	workspace=`find $TDIRS -maxdepth $DEPTH -type d | $FUZZY`
+	workspace=`find $TDIRS -maxdepth $DEPTH -type d | sort -u | $FUZZY`
 	_err=$?
 	if [ $_err -ne 0 ]; then
 		exit 1
