@@ -75,11 +75,7 @@ create_session()
 # attach to session
 attach_to()
 {
-	if [ -z $TMUX ]; then
-		tmux switch-client -t $1
-	else
-		tmux a -t $1
-	fi
+	tmux switch-client -t $1 || tmux a -t $1 
 }
 
 _wrks=`find_dir` || exit 69

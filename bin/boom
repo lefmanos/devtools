@@ -1,6 +1,12 @@
 #!/bin/sh
 # this is not used much
 
+# attach to session
+attach_to()
+{
+	tmux switch-client -t $1 || tmux a -t $1 
+}
+
  
 
 cache=$HOME/.local/share/boom/list
@@ -21,6 +27,7 @@ while [ $# -ne 0 ]; do
 			fi
 			echo $ses 
 			tmux new-ses -c ${ses##* } -s ${ses% *} -d 
+			attach_to ${ses% *}
 			shift
 			;;
 		"rm") ses=`cat $cache | fzf `

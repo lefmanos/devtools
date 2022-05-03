@@ -8,7 +8,7 @@ if [ $? -eq 0 ]; then
 	MK="platformio run"
 else
 	notify-send -t 3000 "$dir" "Start building with Makefile"
-	MK="make -j3"
+	MK="make -j2"
 fi
 
 # check if we need bear - positional argument

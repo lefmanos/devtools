@@ -20,6 +20,7 @@ fi
 if [ -d JuceLibraryCode ]; then
 	notify-send -t 3000 "tmake" "juce framework detected"
 	if [ -d Builds/LinuxMakefile ]; then
+		ln -sf $DIR/Builds/LinuxMakefile/compile_commands.json $DIR/Source/compile_commands.json
 		tmux send-keys -t build "cd $DIR/Builds/LinuxMakefile
 		"
 		# Ready to build
