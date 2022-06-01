@@ -19,14 +19,14 @@ fi
 #See if we are building juce code
 if [ -d JuceLibraryCode ]; then
 	notify-send -t 3000 "tmake" "juce framework detected"
-	if [ -d Builds/LinuxMakefile ]; then
+	if [ ! -d Builds/LinuxMakefile ]; then
+		notify-send "tmake" "Builds directory not found - run Projucer to configure."
+		exit 1
+	else
 		ln -sf $DIR/Builds/LinuxMakefile/compile_commands.json $DIR/Source/compile_commands.json
 		tmux send-keys -t build "cd $DIR/Builds/LinuxMakefile
 		"
 		# Ready to build
-	else
-		notify-send "tmake" "Builds directory not found - run Projucer to configure."
-		exit 1
 	fi
 fi
 		
