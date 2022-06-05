@@ -65,7 +65,7 @@ find_dir()
 # create session
 create_session()
 {
-	name=$(basename $1)
+	name=$(basename $1 | tr . _)
 	if ! tmux has-session -t $name 2> /dev/null; then
 		tmux new -ds $name -c $1 > /dev/null
 	fi
