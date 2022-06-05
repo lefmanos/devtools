@@ -30,5 +30,5 @@ if [ -d JuceLibraryCode ]; then
 	fi
 fi
 		
-tmux send-keys -t build "make-and-notify $OPTS $@
+tmux send-keys -t build "clear && make-and-notify $OPTS $@
 "
