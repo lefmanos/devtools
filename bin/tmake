@@ -3,6 +3,15 @@
 DIR=`pwd`
 tmux has-session -t build 2>/dev/null || tmux new -s build -d -c $DIR
 
+tmux send-keys -t build "
+
+
+
+echo tmake
+
+
+echo
+"
 if [ $# -ne 0 ]; then
 if [ $1 = "new" ]; then
 	# useless
@@ -16,5 +25,5 @@ if [ $1 = "bear" ]; then
 fi
 fi
 
-tmux send-keys -t build "clear && make-and-notify $OPTS $@
+tmux send-keys -t build "make-and-notify $OPTS $@
 "
