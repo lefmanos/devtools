@@ -47,6 +47,7 @@ while [ $# -ne 0 ]; do
 			;;
 		*)
 			FUZZY=$1
+			shift
 			;;
 	esac
 done;
