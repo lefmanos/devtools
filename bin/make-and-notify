@@ -35,8 +35,21 @@ else
 			fi
 		fi
 	fi
-	notify-send -t 3000 "$DIR" "Start building with Makefile"
-	MK="make $make_opts"
+	#See if we are building latex
+	if [ -f *.tex ]; then
+		mkdir -p build
+		notify-send -t 3000 "$DIR" "Start building with pdflatex"
+		_src=$(ls *.tex)
+		pdflatex --output-directory build $_src
+		bibtex build/*.aux
+		pdflatex --output-directory build $_src
+		pdflatex --output-directory build $_src
+		notify-send -t 3000 "$DIR" "Done building PDF"
+		exit 0
+	else
+		notify-send -t 3000 "$DIR" "Start building with Makefile"
+		MK="make $make_opts"
+	fi
 fi
 
 MK="$prefix $MK $opts"
