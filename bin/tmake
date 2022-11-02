@@ -25,5 +25,7 @@ if [ $1 = "bear" ]; then
 fi
 fi
 
+tmux send-keys -t build "cd $DIR
+"
 tmux send-keys -t build "make-and-notify $OPTS $@
 "
