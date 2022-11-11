@@ -6,6 +6,7 @@ cd $HOME/work
 WORK="$HOME/work \
 	$HOME/work/coding/mia \
 	$HOME/work/diplwmatiki \
+	$HOME/work/academia/desknet\
 	$HOME/work/academia/mathimata"
 
 PERSONAL="$HOME/.config \
