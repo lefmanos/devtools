@@ -21,6 +21,7 @@ usage()
 	printf "\n"
 	printf "Lets you select a directory via fzf, creates a tmux session with the name of the direcory and attaches to it\n"
 	printf "\t--depth, -d\tchange search depth (default 2)\n"
+	printf "\t--rofi, -r\tuse rofi as fuzzyfinder\n"
 	printf "\t--help, -h\tprints this help message\n"
 	printf "\tFUZZYFINDER\tProvide an alternative to fzf, eg dmenu, rofi. Optional\n"
 
@@ -31,6 +32,8 @@ usage()
 }
 # setup fuzzy finder
 FUZZY=fzf
+FUZZY_ROFI='rofi -dmenu -i -matching fuzzy -theme fancy'
+
 DEPTH=2
 while [ $# -ne 0 ]; do
 	case $1 in
@@ -38,6 +41,10 @@ while [ $# -ne 0 ]; do
 			usage
 			shift
 			;;
+		-r|--rofi|r)
+            FUZZY=$FUZZY_ROFI
+			shift
+            ;;
 		-d|--depth|d)
 			if [ $# -ne 2 ]; then
 				usage
@@ -56,6 +63,8 @@ done;
 # find directory for new session
 find_dir()
 {
+    echo hello there
+    echo $FUZZY
 	workspace=`find $TDIRS -maxdepth $DEPTH -type d | sort -u | $FUZZY`
 	_err=$?
 	if [ $_err -ne 0 ]; then
