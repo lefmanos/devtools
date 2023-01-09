@@ -4,10 +4,9 @@
 cd $HOME/work
 
 WORK="$HOME/work \
-	$HOME/work/coding/mia \
+	$HOME/work/coding/* \
 	$HOME/work/diplwmatiki \
-	$HOME/work/academia\
-	$HOME/work/academia/mathimata"
+	$HOME/work/academia/*"
 
 PERSONAL="$HOME/.config \
 	$HOME/.local/bin \
