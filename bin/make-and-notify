@@ -42,10 +42,12 @@ else
 		mkdir -p build
 		notify-send -t 3000 "$DIR" "Start building with pdflatex"
 		_src=$(ls *.tex)
-		pdflatex --output-directory build $_src
+        set -e
+		pdflatex --shell-escape --output-directory build $_src
 		bibtex build/*.aux
-		pdflatex --output-directory build $_src
-		pdflatex --output-directory build $_src
+		pdflatex --shell-escape --output-directory build $_src
+		pdflatex --shell-escape --output-directory build $_src
+        set +e
 		notify-send -t 3000 "$DIR" "Done building PDF"
 		exit 0
 	else

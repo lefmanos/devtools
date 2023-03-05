@@ -5,8 +5,7 @@ cd $HOME/work
 
 WORK="$HOME/work \
 	$HOME/work/coding/* \
-	$HOME/work/diplwmatiki \
-	$HOME/work/academia/*"
+	$HOME/work/thesis "
 
 PERSONAL="$HOME/.config \
 	$HOME/.local/bin \
@@ -34,6 +33,7 @@ FUZZY=fzf
 FUZZY_ROFI='rofi -dmenu -i -matching fuzzy -theme fancy'
 
 DEPTH=2
+action=tmuxsession
 while [ $# -ne 0 ]; do
 	case $1 in
 		help|-h|--help|-help|h)
@@ -52,6 +52,10 @@ while [ $# -ne 0 ]; do
 			DEPTH=$1
 			shift
 			;;
+        -w|--workspace-switch)
+            action=workspace
+            shift
+            ;;
 		*)
 			FUZZY=$1
 			shift
@@ -87,6 +91,11 @@ attach_to()
 }
 
 _wrks=`find_dir` || exit 69
-_ns=`create_session $_wrks`
-echo $_ns
-attach_to $_ns
+if [ "$action" = "tmuxsession" ]; then
+    _ns=`create_session $_wrks`
+    echo $_ns
+    attach_to $_ns
+elif [ "$action" = "workspace" ]; then
+    cd $_wrks
+    set_quick_access 
+fi
