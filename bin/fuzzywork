@@ -30,7 +30,7 @@ usage()
 }
 # setup fuzzy finder
 FUZZY=fzf
-FUZZY_ROFI='rofi -dmenu -i -matching fuzzy -theme fancy'
+FUZZY_ROFI='rofi -dmenu -i -matching fuzzy -theme arthur'
 
 DEPTH=2
 action=tmuxsession
@@ -56,6 +56,10 @@ while [ $# -ne 0 ]; do
             action=workspace
             shift
             ;;
+        -p|--open-pdf)
+            action=pdf
+            shift
+            ;;
 		*)
 			FUZZY=$1
 			shift
@@ -64,6 +68,17 @@ while [ $# -ne 0 ]; do
 done;
 
 # find directory for new session
+
+find_file()
+{
+	workspace=`find $TDIRS -maxdepth 4 -type f -name "*.pdf" | sort -u | $FUZZY`
+	_err=$?
+	if [ $_err -ne 0 ]; then
+		exit 1
+	fi
+	echo $workspace
+}
+
 find_dir()
 {
 	workspace=`find $TDIRS -maxdepth $DEPTH -type d | sort -u | $FUZZY`
@@ -90,12 +105,17 @@ attach_to()
 	tmux switch-client -t $1 || tmux a -t $1 
 }
 
-_wrks=`find_dir` || exit 69
 if [ "$action" = "tmuxsession" ]; then
+    _wrks=`find_dir` || exit 69
     _ns=`create_session $_wrks`
     echo $_ns
     attach_to $_ns
 elif [ "$action" = "workspace" ]; then
+    _wrks=`find_dir` || exit 69
     cd $_wrks
     set_quick_access 
+elif [ "$action" = "pdf" ]; then
+    _pdf=`find_file` || exit 69
+    zathura $_pdf &
+    disown
 fi
