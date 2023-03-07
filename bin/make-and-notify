@@ -44,7 +44,7 @@ else
 		_src=$(ls *.tex)
         set -e
 		notify-send "PDFLaTeX" "... generating auxiliary files..."
-		pdflatex -draftmode --output-directory build $_src
+		pdflatex -draftmode --shell-escape --output-directory build $_src
 		notify-send "BibTeX" "... generating blg and bbl files..."
 		bibtex build/*.aux
         notify-send "PDFLaTeX" "... patching bib ..."
