@@ -43,10 +43,14 @@ else
 		notify-send -t 3000 "$DIR" "Start building with pdflatex"
 		_src=$(ls *.tex)
         set -e
+		notify-send "PDFLaTeX" "... generating auxiliary files..."
 		pdflatex -draftmode --output-directory build $_src
+		notify-send "BibTeX" "... generating blg and bbl files..."
 		bibtex build/*.aux
-		pdflatex --shell-escape --output-directory build $_src
-		pdflatex -draftmode --output-directory build $_src
+        notify-send "PDFLaTeX" "... patching bib ..."
+        pdflatex -draftmode --output-directory build $_src
+        notify-send "PDFLaTeX" "... start building pdf ..."
+        pdflatex --shell-escape --output-directory build $_src
         set +e
 		notify-send -t 3000 "$DIR" "Done building PDF"
 		exit 0
