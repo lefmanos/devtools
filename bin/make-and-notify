@@ -20,8 +20,11 @@ if [ $? -eq 0 ]; then
 	notify-send -t 3000 "$DIR" "Start building with platformio"
 	MK="platformio run"
 else
-	#See if we are building juce code
-	if [ -d JuceLibraryCode ]; then
+    if [ -f Makefile ]; then
+        notify-send -t 3000 "$DIR" "Start building with Makefile"
+        MK="make $make_opts"
+    #See if we are building juce code
+	elif [ -d JuceLibraryCode ]; then
 		notify-send -t 3000 "tmake" "juce framework detected"
 		if [ ! -d Builds/LinuxMakefile ]; then
 			notify-send "tmake" "Builds DIRectory not found - run Projucer to configure."
@@ -34,11 +37,10 @@ else
 				make_opts="$make_opts CXX=/bin/g++-11"
 			fi
 		fi
-	fi
-	#See if we are building latex
+    #See if we are building latex
 	# Dependancies
 	# all group texlive-most
-	if [ -f *.tex ]; then
+	elif [ -f *.tex ]; then
 		mkdir -p build
 		notify-send -t 3000 "$DIR" "Start building with pdflatex"
 		_src=$(ls *.tex)
@@ -50,13 +52,10 @@ else
         notify-send "PDFLaTeX" "... patching bib ..."
         pdflatex -draftmode --output-directory build $_src
         notify-send "PDFLaTeX" "... start building pdf ..."
-        pdflatex --shell-escape --output-directory build $_src
+        pdflatex --output-directory build $_src
         set +e
 		notify-send -t 3000 "$DIR" "Done building PDF"
 		exit 0
-	else
-		notify-send -t 3000 "$DIR" "Start building with Makefile"
-		MK="make $make_opts"
 	fi
 fi
 

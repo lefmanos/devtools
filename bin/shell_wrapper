@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Define the prompt string
+PS1="live-shell> "
+
+# Initialize the history file
+HISTFILE="$XDG_CACHE_HOME/.live-shell-history"
+touch "$HISTFILE"
+
+# Load the history file into memory
+HISTSIZE=1000
+HISTFILESIZE=2000
+history -r "$HISTFILE"
+
+# Define a function to write the current command to the history file
+function add_history {
+    history -s "$1"
+    history -w "$HISTFILE"
+}
+
+# Define a function to handle user input
+function handle_input {
+    # Read input from the user
+    read -e -p "$PS1" input
+
+    # Add the command to the history
+    add_history "$input"
+
+    # Handle the command
+    eval "$input"
+}
+#
+# Function to handle Ctrl-C signal
+function interrupt {
+    if [[ $? -ne 0 ]]; then
+        # Forward signal to running command
+        kill -s SIGINT %1
+    fi
+
+}
+
+# Trap Ctrl+C and exit on Ctrl+D
+trap interrupt SIGINT
+trap "exit" SIGQUIT
+trap "exit" SIGTSTP
+
+# Continuously prompt the user for input
+while true
+do
+    # Handle the user's input
+    handle_input
+
+    # Save the history after each command
+    history -w "$HISTFILE"
+done
