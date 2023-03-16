@@ -11,8 +11,6 @@ PERSONAL="$HOME/.config \
 	$HOME/.local/bin \
 	$HOME/.local/src"
 
-TDIRS="$TDIRS $WORK $PERSONAL"
-
 usage()
 {
 	printf "Usage $0 [OPTION] [FUZZYFINDER]\n"
@@ -106,15 +104,18 @@ attach_to()
 }
 
 if [ "$action" = "tmuxsession" ]; then
+    TDIRS="$TDIRS $WORK $PERSONAL"
     _wrks=`find_dir` || exit 69
     _ns=`create_session $_wrks`
     echo $_ns
     attach_to $_ns
 elif [ "$action" = "workspace" ]; then
+    TDIRS="$TDIRS $WORK $PERSONAL"
     _wrks=`find_dir` || exit 69
     cd $_wrks
     set_quick_access 
 elif [ "$action" = "pdf" ]; then
+    TDIRS="$TDIRS $WORK"
     _pdf=`find_file` || exit 69
     zathura $_pdf &
     disown
