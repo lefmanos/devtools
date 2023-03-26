@@ -33,7 +33,9 @@ else
 			ln -sf $DIR/Builds/LinuxMakefile/compile_commands.json $DIR/Source/compile_commands.json
 			cd $DIR/Builds/LinuxMakefile
 			# Ready to build
-			if [ -f /bin/g++-11 ]; then
+			if [ -f /bin/g++-10 ]; then
+				make_opts="$make_opts CXX=/bin/g++-10"
+			elif [ -f /bin/g++-11 ]; then
 				make_opts="$make_opts CXX=/bin/g++-11"
 			fi
 		fi
