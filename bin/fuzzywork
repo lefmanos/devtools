@@ -91,12 +91,28 @@ find_dir()
 create_session()
 {
 	name=$(basename $1 | tr . _)
-	if ! tmux has-session -t $name 2> /dev/null; then
-		tmux new -ds $name -c $1 > /dev/null
+	if ! zellij a "$name" 2> /dev/null; then
+		# tmux new -ds $name -c $1 > /dev/null
+        zellij -s "$name"
 	fi
 	echo $name
 }
 
+zellij_session()
+{
+	name=$(basename $1 | tr . _)
+    if [ -z $ZELLIJ ]; then
+        # not attached
+        echo "create new session"
+        zellij a -c
+        echo "session created"
+        zellij action new-tab -l default -n "$name" -c "$1"
+    else
+        # attached
+        zellij action new-tab -l default -n "$name" -c "$1"
+    fi
+    exit 1
+}
 # attach to session
 attach_to()
 {
@@ -106,9 +122,13 @@ attach_to()
 if [ "$action" = "tmuxsession" ]; then
     TDIRS="$TDIRS $WORK $PERSONAL"
     _wrks=`find_dir` || exit 69
-    _ns=`create_session $_wrks`
-    echo $_ns
-    attach_to $_ns
+    cd $_wrks
+    # echo $_wrks
+    zellij_session $_wrks
+    
+    #_ns=`create_session $_wrks`
+    #echo $_ns
+    #attach_to $_ns
 elif [ "$action" = "workspace" ]; then
     TDIRS="$TDIRS $WORK $PERSONAL"
     _wrks=`find_dir` || exit 69

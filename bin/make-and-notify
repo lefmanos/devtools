@@ -11,7 +11,7 @@ fi
 fi
 
 DIR=`pwd`
-make_opts="-j2 "
+make_opts="-j4 "
 opts="$@"
 
 ls | grep platformio.ini
@@ -24,21 +24,22 @@ else
         notify-send -t 3000 "$DIR" "Start building with Makefile"
         MK="make $make_opts"
     #See if we are building juce code
-	elif [ -d JuceLibraryCode ]; then
+	elif [ -f *.jucer ]; then
 		notify-send -t 3000 "tmake" "juce framework detected"
 		if [ ! -d Builds/LinuxMakefile ]; then
-			notify-send "tmake" "Builds DIRectory not found - run Projucer to configure."
-			exit 1
-		else
-			ln -sf $DIR/Builds/LinuxMakefile/compile_commands.json $DIR/Source/compile_commands.json
-			cd $DIR/Builds/LinuxMakefile
-			# Ready to build
-			if [ -f /bin/g++-10 ]; then
-				make_opts="$make_opts CXX=/bin/g++-10"
-			elif [ -f /bin/g++-11 ]; then
-				make_opts="$make_opts CXX=/bin/g++-11"
-			fi
+			# notify-send "tmake" "Builds DIRectory not found - run Projucer to configure."
+            notify-send "tmake" "Resaving Projucer"
+            ls ./*.jucer | xargs Projucer --resave
 		fi
+        ln -sf $DIR/Builds/LinuxMakefile/compile_commands.json $DIR/Source/compile_commands.json
+        cd $DIR/Builds/LinuxMakefile
+        # Ready to build
+        if [ -f /bin/g++-10 ]; then
+            make_opts="$make_opts CXX=/bin/g++-10"
+        elif [ -f /bin/g++-11 ]; then
+            make_opts="$make_opts CXX=/bin/g++-11"
+        fi
+        MK="make $make_opts"
     #See if we are building latex
 	# Dependancies
 	# all group texlive-most
@@ -62,6 +63,9 @@ else
 fi
 
 MK="$prefix $MK $opts"
+# notify-send "DEBUG" "$MK"
+# notify-send "prefix" "$prefix"
+# notify-send "opts" "$opts"
 $MK && notify-send -t 60000 "$DIR" Done ||
 	notify-send -u critical "Error"
 
