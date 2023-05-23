@@ -104,12 +104,12 @@ zellij_session()
     if [ -z $ZELLIJ ]; then
         # not attached
         echo "create new session"
-        zellij a -c
+        zellij -l strider a -c
         echo "session created"
-        zellij action new-tab -l default -n "$name" -c "$1"
+        zellij action new-tab -l strider -n "$name" -c "$1"
     else
         # attached
-        zellij action new-tab -l default -n "$name" -c "$1"
+        zellij action new-tab -l strider -n "$name" -c "$1"
     fi
     exit 1
 }
