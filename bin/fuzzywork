@@ -98,18 +98,19 @@ create_session()
 	echo $name
 }
 
+LAYOUT=default
 zellij_session()
 {
 	name=$(basename $1 | tr . _)
     if [ -z $ZELLIJ ]; then
         # not attached
         echo "create new session"
-        zellij -l strider a -c
+        zellij -l $LAYOUT a -c
         echo "session created"
-        zellij action new-tab -l strider -n "$name" -c "$1"
+        zellij action new-tab -n "$name" -c "$1" -l $LAYOUT
     else
         # attached
-        zellij action new-tab -l strider -n "$name" -c "$1"
+        zellij action new-tab -n "$name" -c "$1" -l $LAYOUT
     fi
     exit 1
 }
