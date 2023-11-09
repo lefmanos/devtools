@@ -11,6 +11,9 @@ PERSONAL="$HOME/.config \
 	$HOME/.local/bin \
 	$HOME/.local/src"
 
+DOCS="$HOME/documents \
+    $HOME/Downloads "
+
 usage()
 {
 	printf "Usage $0 [OPTION] [FUZZYFINDER]\n"
@@ -136,7 +139,7 @@ elif [ "$action" = "workspace" ]; then
     cd $_wrks
     set_quick_access 
 elif [ "$action" = "pdf" ]; then
-    TDIRS="$TDIRS $WORK"
+    TDIRS="$TDIRS $WORK $DOCS"
     _pdf=`find_file` || exit 69
     zathura $_pdf &
     disown
