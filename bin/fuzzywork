@@ -141,6 +141,6 @@ elif [ "$action" = "workspace" ]; then
 elif [ "$action" = "pdf" ]; then
     TDIRS="$TDIRS $WORK $DOCS"
     _pdf=`find_file` || exit 69
-    zathura $_pdf &
+    zathura "$_pdf" &
     disown
 fi
